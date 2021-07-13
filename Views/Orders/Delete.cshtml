@@ -1,0 +1,72 @@
+﻿@model WaterDelivery.Models.Order
+
+@{
+    ViewBag.Title = "Удалить заказ";
+}
+
+<h2>Удалить заказ</h2>
+
+<h3>Вы действительно хотите удалить этот заказ?</h3>
+<div>
+    <h4>Order</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Логин
+        </dt>
+
+        <dd>
+            @ViewBag.Login
+        </dd>
+
+        <dt>
+            Адрес
+        </dt>
+
+        <dd>
+            @ViewBag.Address
+        </dd>
+
+        <dt>
+            Объем воды
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WaterVolume)л
+        </dd>
+
+        <dt>
+            Время
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+
+        <dt>
+            Дата создания
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Created_at)
+        </dd>
+
+        <dt>
+            Дата изменения
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Updated_at)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

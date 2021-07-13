@@ -1,0 +1,109 @@
+﻿@model IEnumerable<WaterDelivery.Models.Order>
+
+@{
+    ViewBag.Title = "Список заказов";
+}
+
+<h2>Список заказов</h2>
+
+<p>
+    @Html.ActionLink("Создать заказ", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            Логин
+        </th>
+        <th>
+            Адрес
+        </th>
+        <th>
+            Объем воды
+        </th>
+        <th>
+            Время
+        </th>
+        <th>
+            Дата создания
+        </th>
+        <th>
+            Дата изменения
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.Login)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserAddress.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WaterVolume)л
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Created_at)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Updated_at)
+            </td>
+            <td>
+                @Html.ActionLink("Изменить", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Подробнее", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Удалить", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
+</table>
+<div id="map"></div>
+<style>
+    #map {
+        height: 350px;
+        width: 450px;
+    }
+</style>
+
+<script type="text/javascript">
+    var addresses = [];
+    @foreach (var d in Model)
+            {
+                @:addresses.push("г. Томск, " + "@d.UserAddress.Address");
+            }
+    console.log(addresses);
+    function initMap() {
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+            center: new google.maps.LatLng(56.485867, 84.968000),
+            zoom: 10
+        });
+        geocoder = new google.maps.Geocoder();
+        addresses.forEach(n => codeAddress(n, geocoder, map));
+    }
+    function codeAddress(address, geocoder, map) {
+        geocoder.geocode({ address }, function (results, status) {
+            if (status === 'OK') {
+                    const infoWindow = new google.maps.InfoWindow();
+                    const marker = new google.maps.Marker({
+                    map: map,
+                    position: results[0].geometry.location,
+                });
+                marker.addListener("click", () => {
+                    infoWindow.close();
+                    infoWindow.setContent(address);
+                    infoWindow.open(marker.getMap(), marker);
+                })
+            } else {
+                alert('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+    }
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCo7YK7tHbczUJQ-ksV2rdCHFAAV_GJ_bA&callback=initMap&libraries=&v=weekly"
+        async></script>

@@ -1,0 +1,107 @@
+﻿@model WaterDelivery.Models.Order
+
+@{
+    ViewBag.Title = "Подробнее";
+}
+
+<h2>Подробнее</h2>
+<div class="row">
+    <div class="col-lg-6">
+        <h4>Заказ</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                Логин
+            </dt>
+
+            <dd>
+                @ViewBag.Login
+            </dd>
+
+            <dt>
+                Адрес
+            </dt>
+
+            <dd>
+                @ViewBag.Address
+            </dd>
+
+            <dt>
+                Объем воды
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.WaterVolume)л
+            </dd>
+
+            <dt>
+                Время
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Date)
+            </dd>
+
+            <dt>
+                Дата создания
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Created_at)
+            </dd>
+
+            <dt>
+                Дата изменения
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Updated_at)
+            </dd>
+
+        </dl>
+    </div>
+    <div id="map" class="col-lg-6"></div>
+</div>
+<p>
+    @Html.ActionLink("Изменить", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Назад", "Index")
+</p>
+
+<style>
+    #map {
+        height: 350px;
+        width: 450px;
+    }
+</style>
+
+<script>
+    var geocoder;
+    var map;
+    var address = "г. Томск" + '@ViewBag.Address';
+    function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 17,
+            center: { lat: -34.397, lng: 150.644 }
+        });
+        geocoder = new google.maps.Geocoder();
+        codeAddress(geocoder, map);
+    }
+
+    function codeAddress(geocoder, map) {
+        geocoder.geocode({ 'address': address }, function (results, status) {
+            if (status === 'OK') {
+                map.setCenter(results[0].geometry.location);
+                var marker = new google.maps.Marker({
+                    map: map,
+                    position: results[0].geometry.location
+                });
+            } else {
+                alert('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+    }
+
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCo7YK7tHbczUJQ-ksV2rdCHFAAV_GJ_bA&callback=initMap&libraries=&v=weekly"
+        async></script>
